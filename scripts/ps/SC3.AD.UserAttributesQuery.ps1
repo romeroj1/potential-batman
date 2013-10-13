@@ -1,0 +1,1 @@
+﻿get-qaduser QXGTZYRYMMI -IncludeAllProperties -SerializeValues | Export-Clixml 

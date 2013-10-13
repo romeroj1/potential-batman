@@ -1,0 +1,1 @@
+powershell -command "& 'e:\utils\gs\cpu_mon.ps1'"

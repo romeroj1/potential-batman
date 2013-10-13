@@ -1,0 +1,88 @@
+#!/bin/sh
+
+#
+# This script is used to invoke embedded oracle programs or scripts
+#
+# Note: This script assumes that the environment variables ORACLE_HOME and
+# ORACLE_SID have been set properly.
+
+#
+# Define the usage function.
+#
+Usage() {
+    echo Usage: arcdbutil [command] [arguments]
+    echo
+    echo Execute a database command with relevant arguments. The available commands 
+    echo are listed below. There may be additional working commands depending upon
+    echo the database. Commands:
+    echo
+    echo "sql             Get a command line sql interface."
+    echo "listener        Invoke the database listener."
+    echo "backup          Backup the database."
+    echo "recover         Recover the database."
+    echo "import          Import data into the database."
+    echo "export          Export data from the database."
+    echo "patch           Apply or roll back an Oracle patch (e.g. any Oracle Critical Patch Update)."
+
+    exit $1
+}
+
+# Check for ORACLE_HOME
+if [ -z "$ORACLE_HOME" ]; then
+    echo ERROR: You must set ORACLE_HOME properly!
+    exit 1
+fi
+
+if [ ! -d "$ORACLE_HOME" ]; then
+    echo ERROR: Invalid ORACLE_HOME: $ORACLE_HOME not found!
+    exit 1
+fi
+
+# Check for ORACLE_SID.
+if [ -z "$ORACLE_SID" ]; then
+    echo ERROR: You must set ORACLE_SID properly!
+    exit 1
+fi
+
+# Set path
+PATH=$ORACLE_HOME/bin:$PATH
+
+# Usage
+if [ "$1" = "" ]; then
+   Usage 1
+elif [ "$1" = "--help" ]; then
+   Usage 1
+fi
+
+# Invoke the specified command
+COMMAND=$1
+shift
+
+# Configure database specific command names
+COMMAND_DIRECTORY="$ORACLE_HOME/bin"
+if [ "$COMMAND" = "sql" ]; then 
+    COMMAND=sqlplus
+elif [ "$COMMAND" = "listener" ]; then
+    COMMAND=lsnrctl
+elif [ "$COMMAND" = "backup" ]; then
+    COMMAND=rman
+elif [ "$COMMAND" = "recover" ]; then
+    COMMAND=rman
+elif [ "$COMMAND" = "import" ]; then
+    COMMAND=imp
+elif [ "$COMMAND" = "export" ]; then
+    COMMAND=exp
+elif [ "$COMMAND" = "patch" ]; then
+    COMMAND_DIRECTORY=$ORACLE_HOME/OPatch
+    PATH=$ORACLE_HOME/OPatch:$PATH
+    COMMAND=opatch
+fi
+
+# Check if the command exists.
+if [ ! -f "$COMMAND_DIRECTORY/$COMMAND" ]; then
+    echo ERROR: Command $COMMAND_DIRECTORY/$COMMAND not found!
+    echo
+    Usage 1
+fi
+
+"$COMMAND_DIRECTORY/$COMMAND" $1 $2 $3 $4 $5 $6 $7 $8 $9

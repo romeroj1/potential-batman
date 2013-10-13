@@ -1,0 +1,1 @@
+powershell -command "& 'C:\Utils\Scripts\DownloadaFileFromInternet.ps1'"

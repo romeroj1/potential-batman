@@ -1,0 +1,1 @@
+powershell -command "& 'e:\utils\gs\cpu_stat.ps1'"
