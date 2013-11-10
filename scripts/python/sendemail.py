@@ -1,9 +1,15 @@
 #!/usr/bin/env python
 
 import smtplib
-
+import os
+import ConfigParser
+import backup
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+
+confpath = os.path.dirname(__file__)
+config = ConfigParser.ConfigParser()
+config.read(confpath + "/backup.conf")
 
 
 def sendmail(subject=None,strmsg=None):
@@ -11,31 +17,22 @@ def sendmail(subject=None,strmsg=None):
     
     # me == my email address
     # you == recipient's email address
-    me = "messenger@johannromero.net"
-    sc3infra = ['johann.romero@gmail.com']
-    COMMASPACE = ', '
-    strmsg = None
-    strmailgw = 'smtp.sce.com'
-
+	#Credentials
+    username = config.get("Config","usrEmail")
+    password = config.get("Config","usrEmailPwd")	
+    me = config.get("Config","fromAddr")
+    emaillist = backup.splitNreturn(config.get("Config", "EmailList"))
+    strmailgw = config.get("Config","smtp")
     # Create message container - the correct MIME type is multipart/alternative.
     msg = MIMEMultipart('alternative')
     msg['Subject'] = subject
     msg['From'] = me
-    msg['To'] = COMMASPACE.join(sc3infra)
+    msg['To'] = ', '.join(emaillist) 
 
 
     # Create the body of the message (a plain-text and an HTML version).
     text = strmsg
-    html = """\
-    <html>
-      <head></head>
-          <body>
-            <p>Hi!<br>"""
-               strmsg
-            """</p>
-          </body>
-        </html>
-    """
+    html = """<html><head></head><body><p>Hi!<br></p></body></html>"""
 
     # Record the MIME types of both parts - text/plain and text/html.
     part1 = MIMEText(text, 'plain')
@@ -45,14 +42,15 @@ def sendmail(subject=None,strmsg=None):
     # According to RFC 2046, the last part of a multipart message, in this case
     # the HTML message, is best and preferred.
     msg.attach(part1)
-    msg.attach(part2)
+    #msg.attach(part2)
 
     # Send the message via local SMTP server.
     s = smtplib.SMTP(strmailgw)
+    #Enable secure connection to gmail smtp
+    s.starttls()
+    #Set credentials to send email via gmail
+    s.login(username,password)
     # sendmail function takes 3 arguments: sender's address, recipient's address
     # and message to send - here it is sent as one string.
-    s.sendmail(me, sc3infra, msg.as_string())
+    s.sendmail(me, emaillist, msg.as_string())
     s.quit()
-
-#if __name__ == "__main__":
-    #sendmail()
