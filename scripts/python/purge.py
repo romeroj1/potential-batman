@@ -24,13 +24,13 @@ now = datetime.datetime.now().strftime("%m%d%Y%H%M")
 li = []
 
 def main():
-    usage = "usage: %prog [options]"
-    parser = optparse.OptionParser(usage)    
+    usage = "usage: %prog [options] arg1 arg2"
+    parser = optparse.OptionParser(usage, version="%prog 1.0")    
     parser.add_option("-r", "--remove", action="store_true", dest="removeFiles", default=False, help="Delete original files.")
-    parser.add_option("-t", "--tar", action="store_true", dest="tarFiles", default=True, help="Tar all files using bzip2 compression as a default. If --gzip or --no-compression are used then tar will be automatically used.")
-    parser.add_option('-g', "--gzip", action="store_true", dest="gzipFiles", default=True, help="Use GZIP compression instead of bzip2")
+    parser.add_option("-t", "--tar", action="store_true", dest="tarFiles", default=True, help="Tar all files using bzip2 compression as a [default]. If --gzip or --no-compression are used then tar will be automatically used.")
+    parser.add_option('-g', "--gzip", action="store_true", dest="gzipFiles", default=True, help="Use GZIP compression instead of bzip2. [default]")
     parser.add_option("-n", "--no-compression", action="store_true", dest="noCompression", default=False, help="Do not use any compression for tar.")
-    parser.add_option("-l", "--list", action="store_true", dest="listFiles", default=True, help="List all files that would be affected. This is the default option.")
+    parser.add_option("-l", "--list", action="store_true", dest="listFiles", default=True, help="List all files that would be affected. [default].")
     options, args = parser.parse_args()
  
     
