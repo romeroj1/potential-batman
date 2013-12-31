@@ -8,11 +8,9 @@ sudo yum -y localinstall --nogpgcheck http://download1.rpmfusion.org/free/fedora
 
 sudo yum -y update
 sudo yum -y update kernel
-sudo yum -y install gnome-tweak-tool gstreamer gstreamer-ffmpeg gstreamer-plugins-bad gstreamer-plugins-bad-free gstreamer-plugins-bad-nonfree gstreamer-plugins-base gstreamer-plugins-good gstreamer-plugins-ugly ffmpeg vlc flash-plugin java-*-openjdk java-*-openjdk-plugin gimp inkscape blender filezilla gwibber unrar p7zip p7zip-plugins yumex nfs-utils azureus python-pip python2-devel fedorautils eclipse wireshark-gnome telnet wget dd_rescue kernel-devel kernel-headers dkms gcc gcc-c++ kmod-wl openvpn
+sudo yum -y install gnome-tweak-tool gstreamer gstreamer-ffmpeg gstreamer-plugins-bad gstreamer-plugins-bad-free gstreamer-plugins-bad-nonfree gstreamer-plugins-base gstreamer-plugins-good gstreamer-plugins-ugly ffmpeg vlc flash-plugin java-*-openjdk java-*-openjdk-plugin gimp inkscape blender filezilla gwibber unrar p7zip p7zip-plugins yumex nfs-utils python-pip python2-devel fedorautils eclipse wireshark-gnome telnet wget dd_rescue kernel-devel kernel-headers dkms gcc gcc-c++ kmod-wl openvpn
 
 sudo yum -y groupinstall 'Development Tools'
 
-sudo wget -O /etc/openvpn/btguard.ca.crt http://btguard.com/btguard.ca.crt
-sudo wget -O /etc/openvpn/btguard.conf http://btguard.com/btguard.conf
 
 

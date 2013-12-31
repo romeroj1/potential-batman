@@ -1,0 +1,12 @@
+<%page expression_filter="h" args="module"/>
+<%
+import splunk.util
+
+if splunk.util.normalizeBoolean(module['useStandardCSS']):
+	css = "/static/app/SA-Utils/stylesheets/jqueryui-splunk.css"
+else:
+	css = "/" + "/".join(['static', 'app', APP['id'], 'stylesheets', 'jqueryui-splunk.css'])
+%>
+<%namespace name="lib" file="//lib.html" import="*"/>
+<%lib:script_tags files="${['/static/app/'+APP['id']+'/jquery-ui-1.8.21.custom.min.js','/static/app/'+APP['id']+'/store.min.js']}" />
+<link rel="stylesheet" type="text/css" href="${css}" />
