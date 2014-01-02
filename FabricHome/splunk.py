@@ -59,6 +59,7 @@ def fwd():
     run('/apps/splunkforwarder/bin/splunk start --accept-license')
     run('/apps/splunkforwarder/bin/splunk enable boot-start')    
     run('/apps/splunkforwarder/bin/splunk add forward-server 10.0.0.99:9997 -auth admin:changeme')        
+    #run('/apps/splunkforwarder/bin/splunk set deploy-poll SERVERNAME:8089')
     run('/apps/splunkforwarder/bin/splunk add monitor /var/log')
     set_splunk_perms()
     sudo('/apps/splunkforwarder/bin/splunk restart')
@@ -88,7 +89,7 @@ def full():
 @task
 def deploy_jrapp(env=None):
     """
-    Deploys the sc3 management application for splunk
+    Deploys the JR management application for splunk
     """
     
     if env == 'None':
@@ -147,3 +148,23 @@ def deploysvr_reload():
     Use to reload deployment server after adding new apps
     '''
     sudo('/apps/splunk/bin/splunk reload deploy-server')
+    restart('f')
+
+@task
+def update_deploymentApps():
+    '''
+    Updates apps used to deploy to remote clients
+    '''
+    local('tar cvfz Splunk_TA_nix.tar.gz Splunk_TA_nix/')
+    local('tar cvfz Splunk_TA_windows.tar.gz Splunk_TA_windows/')
+    put('Splunk_TA_nix.tar.gz','/tmp/Splunk_TA_nix.tar.gz', use_sudo=True, mode=0755)
+    put('Splunk_TA_windows.tar.gz','/tmp/Splunk_TA_windows.tar.gz', use_sudo=True, mode=0755)
+    stop('f')
+    with cd('/apps/splunk/etc/deployment-apps/'):        
+        sudo('tar xvf /tmp/Splunk_TA_windows.tar.gz')
+        sudo('tar xvf /tmp/Splunk_TA_nix.tar.gz')
+        local('rm -f Splunk_TA_windows.tar.gz')
+        local('rm -f Splunk_TA_nix.tar.gz')
+        set_splunk_perms()
+        start('f')
+        deploysvr_reload()
