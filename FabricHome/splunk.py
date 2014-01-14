@@ -45,9 +45,9 @@ def prepare(type=None):
     if type == None:
         print "Please enter a valid splunk software to upload, either F for full or UF for universal forwarder"
         return
-    strpath = '/home/johann/workspace/mixcode/fabric/'
+    strpath = '/home/johann/Downloads/'
     if type.lower() == "f":
-        put(strpath + 'splunk-5.0-140868-linux-2.6-x86_64.rpm', '~/splunk-5.0-140868-linux-2.6-x86_64.rpm', mode=0755)        
+        put(strpath + 'splunk-6.0.1-189883-linux-2.6-x86_64.rpm', '~/splunk-6.0.1-189883-linux-2.6-x86_64.rpm', mode=0755)        
     elif type.lower() == "uf":
         put(strpath + 'splunkforwarder-5.0-140868-linux-2.6-x86_64.rpm', '~/splunkforwarder-5.0-140868-linux-2.6-x86_64.rpm', mode=0755)        
         
@@ -59,6 +59,7 @@ def fwd():
     run('/apps/splunkforwarder/bin/splunk start --accept-license')
     run('/apps/splunkforwarder/bin/splunk enable boot-start')    
     run('/apps/splunkforwarder/bin/splunk add forward-server 10.0.0.99:9997 -auth admin:changeme')        
+    #run('/apps/splunkforwarder/bin/splunk set deploy-poll SERVERNAME:8089')
     run('/apps/splunkforwarder/bin/splunk add monitor /var/log')
     set_splunk_perms()
     sudo('/apps/splunkforwarder/bin/splunk restart')
@@ -81,6 +82,89 @@ def full():
     """
     Plain vanilla install for splunk
     """    
-    run('rpm -i --prefix=/apps splunk-5.0-140868-linux-2.6-x86_64.rpm')
+    run('rpm -i --prefix=/apps splunk-6.0.1-189883-linux-2.6-x86_64.rpm')
     run('/apps/splunk/bin/splunk start --accept-license')
     run('/apps/splunk/bin/splunk enable boot-start')    
+
+@task
+def deploy_jrapp(env=None):
+    """
+    Deploys the JR management application for splunk
+    """
+    
+    if env == 'None':
+        print('Enter a valid environment to deploy the tool to')
+        return
+
+    local('tar cvfz jrlocal.tar.gz jrlocal/')
+    put('jrlocal.tar.gz','/tmp/jrlocal.tar.gz', use_sudo=True, mode=0755)
+    stop('f')
+    with cd('/apps/splunk/etc/apps/'):        
+        sudo('tar xvf /tmp/jrlocal.tar.gz')
+        local('rm -f jrlocal.tar.gz')
+
+    #with cd('/apps/splunk/etc/apps/sc3mgmt/default/'):
+     #   if env == 'p':
+      #      sudo('mv savedsearches.conf.prod savedsearches.conf')
+       # elif env == 's':
+        #    sudo('mv savedsearches.conf.st savedsearches.conf')
+        set_splunk_perms()
+        start('f')
+
+@task
+def restart(type=None):
+    '''Restarts the splunk daemon'''
+    strtype = str.lower(type)
+    if strtype == 'uf':        
+        strpath = '/apps/splunkforwarder/bin/'
+    elif strtype == 'f':
+        strpath = '/apps/splunk/bin/'
+        
+    sudo(strpath + 'splunk restart')
+
+@task
+def start(type):
+    '''Starts splunk'''
+    
+    if type == 'f':
+        sudo('/apps/splunk/bin/splunk start')
+    elif type == 'uf':
+        sudo('/apps/splunkforwarder/bin/splunk start')
+        
+@task
+def stop(type):
+    '''
+    Starts splunk
+    '''
+    
+    if type == 'f':
+        sudo('/apps/splunk/bin/splunk stop')
+    elif type == 'uf':
+        sudo('/apps/splunkforwarder/bin/splunk stop')
+
+@task
+def deploysvr_reload():
+    '''
+    Use to reload deployment server after adding new apps
+    '''
+    sudo('/apps/splunk/bin/splunk reload deploy-server')
+    restart('f')
+
+@task
+def update_deploymentApps():
+    '''
+    Updates apps used to deploy to remote clients
+    '''
+    local('tar cvfz Splunk_TA_nix.tar.gz Splunk_TA_nix/')
+    local('tar cvfz Splunk_TA_windows.tar.gz Splunk_TA_windows/')
+    put('Splunk_TA_nix.tar.gz','/tmp/Splunk_TA_nix.tar.gz', use_sudo=True, mode=0755)
+    put('Splunk_TA_windows.tar.gz','/tmp/Splunk_TA_windows.tar.gz', use_sudo=True, mode=0755)
+    stop('f')
+    with cd('/apps/splunk/etc/deployment-apps/'):        
+        sudo('tar xvf /tmp/Splunk_TA_windows.tar.gz')
+        sudo('tar xvf /tmp/Splunk_TA_nix.tar.gz')
+        local('rm -f Splunk_TA_windows.tar.gz')
+        local('rm -f Splunk_TA_nix.tar.gz')
+        set_splunk_perms()
+        start('f')
+        deploysvr_reload()

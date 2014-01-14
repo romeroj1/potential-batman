@@ -16,7 +16,7 @@ def bcbackup():
     Executes Beyond Compare
     '''
     
-    strbc = r"c:\users\johann\workspace\jrbackup\bcomp.exe"
+    strbc = r"e:\apps\bc\Bcompare.exe"
     strbcconfig = r"c:\users\johann\workspace\jrbackup\sync.config"
     strdate = datetime.datetime.now().strftime("%Y-%m-%d")
     strlogpath = r"e:\logs\syncLog" + strdate + ".txt"   
@@ -26,7 +26,7 @@ def bcbackup():
     #print strlogpath
     
     strcmd = strbc+' @'+strbcconfig
-    #print (strcmd)    
+    print (strcmd)    
 
     if os.path.exists(strbc) and os.path.exists(strbcconfig):
         subprocess.call(strcmd, shell=True)

@@ -1,0 +1,7 @@
+<nav>
+    <view name="home" default="true" />
+    <view name="flashtimeline" />
+    <collection label="Performance">
+    	<view name="homestats" />
+    </collection>
+</nav>

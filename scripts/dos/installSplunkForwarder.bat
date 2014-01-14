@@ -1,0 +1,1 @@
+msiexec.exe /i "F:\Software\windows\Splunk\Forwarders\splunkforwarder-6.0.1-189883-x64-release.msi" INSTALLDIR="E:\apps\SplunkForwarder" DEPLOYMENT_SERVER="jrxlogger01:8089" RECEIVING_INDEXER="jrxlogger01:9997" LAUNCHSPLUNK=1 AGREETOLICENSE=Yes /quiet
