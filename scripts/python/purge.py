@@ -4,6 +4,7 @@
 # Date: 04/16/2013
 # Update: 11/12/2013.Fix tar compresion. move tar option outside of the for loop
 # Update: 12/29/2013. Added logging and for loops to handle multiple paths
+# Update: 01/06/2014. Change email to send contents of files to delete based on the list, rather than reading the log file and the sending the outout.
 # Version: 1.1
 # License: MIT http://www.opensource.org/licenses/mit-license.php
 # based on Don Magee's work at http://tacticalcoder.com/blog/2012/01/quick-and-dirty-log-file-cleanup-with-python/
@@ -149,14 +150,16 @@ def delete_OldFiles(pList):
             my_logger.info('Removing ' + f)
             os.remove(f)  # commented out for testing
         # open and read log file
-        fo = open(logfile, "r")
-        strlogcontent = fo.read()
-        sendmail("Purge Completed", strlogcontent)
+        #fo = open(logfile, "r")
+        #strlogcontent = fo.read()
+        
+        # added by JR on 1/6/2014
+        # Send contents of list
+        sendmail("Purge Completed", pList)
         my_logger.info('Purge Completed')
     except Exception, e:
         #my_logger.info('Could not remove ' + f)
         my_logger.info(e)
-
         
 def archive_OldFiles(li,tarType,tarExt):
     '''
