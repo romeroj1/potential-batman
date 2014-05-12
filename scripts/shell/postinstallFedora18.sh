@@ -8,9 +8,15 @@ sudo yum -y localinstall --nogpgcheck http://download1.rpmfusion.org/free/fedora
 
 sudo yum -y update
 sudo yum -y update kernel
-sudo yum -y install gnome-tweak-tool gstreamer gstreamer-ffmpeg gstreamer-plugins-bad gstreamer-plugins-bad-free gstreamer-plugins-bad-nonfree gstreamer-plugins-base gstreamer-plugins-good gstreamer-plugins-ugly ffmpeg vlc flash-plugin java-*-openjdk java-*-openjdk-plugin gimp inkscape blender filezilla gwibber unrar p7zip p7zip-plugins yumex nfs-utils python-pip python2-devel fedorautils eclipse wireshark-gnome telnet wget dd_rescue kernel-devel kernel-headers dkms gcc gcc-c++ kmod-wl openvpn sysstat
+sudo yum -y install gnome-tweak-tool gstreamer gstreamer-ffmpeg gstreamer-plugins-bad gstreamer-plugins-bad-free gstreamer-plugins-bad-nonfree 
+gstreamer-plugins-base gstreamer-plugins-good gstreamer-plugins-ugly ffmpeg vlc 
+flash-plugin java-*-openjdk java-*-openjdk-plugin gimp inkscape blender filezilla gwibber unrar p7zip p7zip-plugins 
+yumex nfs-utils python-pip python2-devel fedorautils eclipse wireshark-gnome dd_rescue kmod-wl openvpn dkms
+
+sudo yum -y telnet wget kernel-devel kernel-headers gcc gcc-c++ sysstat
 
 sudo yum -y groupinstall 'Development Tools'
 
 
 
+wget http://download.virtualbox.org/virtualbox/4.3.10/VBoxGuestAdditions_4.3.10.iso
