@@ -155,7 +155,8 @@ def delete_OldFiles(pList):
         
         # added by JR on 1/6/2014
         # Send contents of list
-        sendmail("Purge Completed", pList)
+        if email:
+            sendmail("Purge Completed", pList)
         my_logger.info('Purge Completed')
     except Exception, e:
         #my_logger.info('Could not remove ' + f)

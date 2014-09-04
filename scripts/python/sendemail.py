@@ -3,17 +3,18 @@
 import smtplib
 import os
 import ConfigParser
-import backup
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
 confpath = os.path.dirname(__file__)
 config = ConfigParser.ConfigParser()
-config.read(confpath + "/backup.conf")
+config.read(confpath + "/sendmail.conf")
 
 
 def sendmail(subject=None,strmsg=None):
-    '''Sends an email'''
+    '''
+    Sends an email
+    '''
     
     # me == my email address
     # you == recipient's email address
