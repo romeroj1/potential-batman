@@ -9,10 +9,10 @@ from optparse import OptionParser
 #################################################
 
 usage = "usage: %prog [options]"
-basedir = '/splunk/db/amigopod/db/'
+#basedir = '/splunk/db/amigopod/db/'
 #basedir = '/tmp/test/'
 lstbuckets = ['db', 'colddb']
-strsplunkdbhome = '/splunk/db/'
+strsplunkdbhome = '/tmp/db/'
 
 #################################################
 #
@@ -42,7 +42,7 @@ def main():
 
 	if options.index:
 		for i in lstbuckets:
-			basedir = '/splunk/db/' + options.index + '/' + i +'/'
+			basedir = '/tmp/db/' + options.index + '/' + i +'/'
 			renameBuckets(basedir)
 
 def renameBuckets(strBucketName=None):
